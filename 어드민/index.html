@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>망고마켓</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet"/>
+<link rel="icon" type="image/png" href="logo1-v2.png"/>
+<style>
+  body { font-family: 'Noto Sans KR', sans-serif; background: #181A1B; color: #fff;}
+  .carrot-color { color: #FFB600; }
+  .pill { background: #2c2f31; padding: 6px 14px; border-radius: 9999px; margin: 4px; display: inline-flex; align-items: center; gap: 6px; }
+  .cat-icon { background: #232526; border-radius: 12px; padding: 12px; text-align: center; width: 80px; }
+  .cat-icon i { color: #FFB600; font-size: 24px; }
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<header class="w-full border-b border-gray-800 bg-[#181A1B] sticky top-0 z-20">
+  <div class="max-w-5xl mx-auto flex items-center gap-4 justify-between px-4 py-3">
+    <div class="flex items-center gap-3">
+      <img src="logo1-v2.png" alt="망고마켓 로고" class="h-10">
+      <span class="text-lg font-bold carrot-color">망고마켓</span>
+    </div>
+    <a href="admin.html" class="bg-[#FFB600] text-[#181A1B] font-bold px-4 py-1 rounded-full">관리자</a>
+  </div>
+</header>
+
+<!-- 메인 콘텐츠 -->
+<main class="max-w-5xl mx-auto p-4 space-y-6">
+
+  <!-- 검색창 -->
+  <section>
+    <input type="text" placeholder="검색어를 입력하세요" class="w-full p-2 rounded bg-[#232526] text-white"/>
+  </section>
+
+  <!-- 도시 목록 -->
+  <section>
+    <div id="cityList" class="flex flex-wrap"></div>
+  </section>
+
+  <!-- 카테고리 목록 -->
+  <section>
+    <div id="catList" class="flex flex-wrap gap-4"></div>
+  </section>
+
+  <!-- 매물 목록 -->
+  <section>
+    <h2 class="text-lg font-bold carrot-color mb-2">매물 목록</h2>
+    <div id="postsWrap" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+  </section>
+
+</main>
+
+<!-- 하단 등록 버튼 -->
+<footer class="fixed bottom-4 right-4">
+  <a href="post.html" class="bg-[#FFB600] text-[#181A1B] font-bold px-6 py-3 rounded-full shadow-lg">+ 등록</a>
+</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB-2ppxdvtaW50-JghD-6pJYN5vngwA1hM",
+  authDomain: "manggomarket-f1fd3.firebaseapp.com",
+  projectId: "manggomarket-f1fd3",
+  storageBucket: "manggomarket-f1fd3.firebasestorage.app",
+  messagingSenderId: "511082163569",
+  appId: "1:511082163569:web:a68974a1801c8f81271ad0",
+  measurementId: "G-XDS0R40SJB"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function loadMain(){
+  const citys = (await getDocs(collection(db,"citys"))).docs.map(d=>d.data());
+  const cats = (await getDocs(collection(db,"cats"))).docs.map(d=>d.data());
+  const posts = (await getDocs(collection(db,"posts"))).docs.map(d=>d.data());
+
+  // 도시 목록
+  document.getElementById('cityList').innerHTML = citys.map(c=>`<span class="pill">${c.name}</span>`).join('');
+
+  // 카테고리 목록
+  document.getElementById('catList').innerHTML = cats.map(c=>`
+    <div class="cat-icon">
+      <i class="fas fa-tag"></i>
+      <span>${c.name}</span>
+    </div>
+  `).join('');
+
+  // 매물 목록
+  document.getElementById('postsWrap').innerHTML = posts.map(p=>`
+    <div class="bg-[#232526] p-2 rounded-lg">
+      <img src="${p.image || 'https://source.unsplash.com/random/400x300?product'}" alt="상품" class="w-full h-32 sm:h-40 object-cover rounded">
+      <div class="mt-2 text-sm sm:text-base font-bold text-white truncate">${p.title || ''}</div>
+      <div class="text-xs sm:text-sm text-gray-400">${p.price ? '₩'+p.price : ''}</div>
+    </div>
+  `).join('');
+}
+
+loadMain();
+</script>
+</body>
+</html>
