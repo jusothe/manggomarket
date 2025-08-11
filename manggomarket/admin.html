@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>망고마켓 - 관리자</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <header>
+        <h1>관리자 페이지</h1>
+        <nav>
+            <a href="index.html">홈</a>
+            <a href="admin.html">관리자 페이지</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>상품 관리</h2>
+        <form id="product-form">
+            <input type="text" id="product-name" placeholder="상품명" required>
+            <input type="number" id="product-price" placeholder="가격 (VND)" required>
+            <button type="submit">상품 등록</button>
+        </form>
+
+        <h2>등록된 상품</h2>
+        <ul id="admin-product-list"></ul>
+    </main>
+
+    <footer>
+        <p>© 2025 망고마켓 관리자</p>
+    </footer>
+
+    <script src="admin.js"></script>
+</body>
+</html>
